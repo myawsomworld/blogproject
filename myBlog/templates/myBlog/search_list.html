@@ -1,0 +1,37 @@
+{% extends "myBlog/base.html" %}
+
+{% block content %}
+
+        <div id="searchbox">
+            <form method="get"  action="{% url 'search_list' %}" >  
+                <!-- {% csrf_token %} -->
+                {{ form.as_p }}
+                <input id="searchInput" autofocus="" name="query"  placeholder="Search ..." aria-label="search" type="search" autocomplete="off" maxlength="64">
+            </form>
+            <br>
+            {% if query %}
+            <h5 class="entry-hint-parent" >Query="{{ query }} "</h5>
+            {% endif %}
+            <br>
+                {% for post in object_list %}
+                    <article class=post-entry>
+                        
+                            <header class=entry-header>
+                                <h2 class=entry-hint-parent>{{ post.title }}</h2>
+                            </header>
+                            <div class=entry-content>
+                                <p>{{ post.summary }} </p>
+                            </div>
+                            <footer class=entry-footer>
+                                <span title='2024-06-06 11:15:08 +0000 UTC'>{{ post.created_at }}
+                                </span>
+                                
+                            </footer>
+                            <a class=entry-link href="{% url 'post_detail' post.category.slug post.slug %}" />
+                        </a>
+                    </article>
+                {% endfor %}
+
+    </div>   
+
+{% endblock %}

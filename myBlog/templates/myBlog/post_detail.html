@@ -1,0 +1,128 @@
+{% extends 'myBlog/base.html' %}
+
+{% block content %}
+
+<body id="top">
+    <script>
+      localStorage.getItem("pref-theme") === "dark" ? document.body.classList.add("dark") : localStorage.getItem("pref-theme") === "light" ? document.body.classList.remove("dark") : window.matchMedia("(prefers-color-scheme: dark)").matches && document.body.classList.add("dark")
+    </script>
+    <header class="header"></header>
+    <main class="main">
+      <article class="post-single">
+        <header class="post-header">
+          <h1 class="post-title entry-hint-parent">{{ post.title }}</h1>
+          <div class="post-meta">
+            <span title="2024-06-06 11:15:08 +0000 UTC">June 6, 2024</span>
+          </div>
+        </header>
+        <div class="toc"></div>
+        <div class="post-content">
+          {{ post.content }}
+        </div>
+        <footer class="post-footer">
+          <ul class="post-tags">
+            <li>
+              <a href="{%url 'category_list' post.category.slug %}">{{post.category.slug}}</a>
+            </li>
+            <li>
+              <a href="https://sookocheff.com/tags/fips/">fips</a>
+            </li>
+          </ul>
+          <!-- This block is for the next post  -->
+          <nav class="paginav">
+            {% if post.get_next_by_created_at %}
+
+                <a class="prev" href="{% url 'post_detail' post.get_previous_by_created_at.category.slug post.get_previous_by_created_at.slug %}">
+                    <span class="title">« Prev</span>
+                     <br>
+                    <span>{{ post.get_previous_by_created_at.title }}</span>
+                </a>
+               
+
+                <a class="next" href="{% url 'post_detail' post.get_next_by_created_at.category.slug post.get_next_by_created_at.slug %}">
+                <span class="title">Next »</span>
+                 <br>
+                
+                <span>{{ post.get_next_by_created_at.title }}</span>
+                </a>
+            {% endif %}
+           
+          </nav>
+        </footer>
+      </article>
+    </main>
+    <!-- <footer class="footer">
+      <span>© 2024 <a href="https://sookocheff.com">Kevin Sookocheff</a>
+      </span> · <span>Powered by <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &amp; <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+      </span>
+    </footer> -->
+    <a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g" style="visibility: hidden; opacity: 0;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor">
+        <path d="M12 6H0l6-6z"></path>
+      </svg>
+    </a>
+
+    <!--Script To go to top  -->
+    <script>
+      let menu = document.getElementById("menu");
+      menu && (menu.scrollLeft = localStorage.getItem("menu-scroll-position"), menu.onscroll = function() {
+        localStorage.setItem("menu-scroll-position", menu.scrollLeft)
+      }), document.querySelectorAll('a[href^="#"]').forEach(e => {
+        e.addEventListener("click", function(e) {
+          e.preventDefault();
+          var t = this.getAttribute("href").substr(1);
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ? document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView() : document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({
+            behavior: "smooth"
+          }), t === "top" ? history.replaceState(null, null, " ") : history.pushState(null, null, `#${t}`)
+        })
+      })
+    </script>
+
+    
+
+    <script>
+      var mybutton = document.getElementById("top-link");
+      window.onscroll = function() {
+        document.body.scrollTop > 800 || document.documentElement.scrollTop > 800 ? (mybutton.style.visibility = "visible", mybutton.style.opacity = "1") : (mybutton.style.visibility = "hidden", mybutton.style.opacity = "0")
+      }
+    </script>
+
+    <!-- theme toggle script  -->
+
+    <script>
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        document.body.className.includes("dark") ? (document.body.classList.remove("dark"), localStorage.setItem("pref-theme", "light")) : (document.body.classList.add("dark"), localStorage.setItem("pref-theme", "dark"))
+      })
+    </script>
+
+    <!-- To copy the code to clipboard  -->
+
+    <script>
+      document.querySelectorAll("pre > code").forEach(e => {
+        const n = e.parentNode.parentNode,
+          t = document.createElement("button");
+        t.classList.add("copy-code"), t.innerHTML = "copy";
+  
+        function s() {
+          t.innerHTML = "copied!", setTimeout(() => {
+            t.innerHTML = "copy"
+          }, 2e3)
+        }
+        t.addEventListener("click", t => {
+          if ("clipboard" in navigator) {
+            navigator.clipboard.writeText(e.textContent), s();
+            return
+          }
+          const n = document.createRange();
+          n.selectNodeContents(e);
+          const o = window.getSelection();
+          o.removeAllRanges(), o.addRange(n);
+          try {
+            document.execCommand("copy"), s()
+          } catch {}
+          o.removeRange(n)
+        }), n.classList.contains("highlight") ? n.appendChild(t) : n.parentNode.firstChild == n || (e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE" ? e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t) : e.parentNode.appendChild(t))
+      })
+    </script>
+  </body>
+{% endblock %}

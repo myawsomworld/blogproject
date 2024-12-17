@@ -1,0 +1,36 @@
+{% extends "myBlog/base.html" %}
+{% block content %}
+{% for post in archives %}
+        
+<article class=post-entry>
+    
+        <header class=entry-header>
+            <h2 class=entry-hint-parent>{{ post.title }}</h2>
+        </header>
+        <div class=entry-content>
+            <p>{{ post.summary }} </p>
+        </div>
+        <footer class=entry-footer>
+            <span title='2024-06-06 11:15:08 +0000 UTC'>{{ post.created_at }}
+            </span>
+            
+        </footer>
+        <a class=entry-link href="{% url 'post_detail' post.category.slug post.slug %}" />
+    </a>
+</article>
+{% endfor %}
+
+<!-- paginator  -->
+{% if is_paginated %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a class="prev" href="/?page={{ page_obj.previous_page_number }}">«&nbsp;Prev&nbsp;</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a class="next" href="/?page={{ page_obj.next_page_number }}">Next&nbsp;&nbsp;»</a>
+            {% endif %}
+        </nav>
+{% endif %}
+
+{% endblock %}
